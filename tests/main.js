@@ -3,7 +3,7 @@ import assert from "assert";
 describe("quantgate", function () {
   it("package.json has correct name", async function () {
     const { name } = await import("../package.json");
-    assert.strictEqual(name, "xomsoz");
+    assert.strictEqual(name, "quantgate");
   });
 
   if (Meteor.isClient) {
