@@ -1,5 +1,5 @@
 {
-  "name": "xomsoz",
+  "name": "quantgate",
   "private": true,
   "scripts": {
     "start": "meteor run",

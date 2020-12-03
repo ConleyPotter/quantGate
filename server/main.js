@@ -8,6 +8,8 @@ dotenv.config({
   path: Assets.absoluteFilePath('.env'),
 });
 
+
+
 const insertBlogPost = blogPostTitle => BlogPostsCollection.insert({ title: blogPostTitle });
  
 Meteor.startup(() => {
