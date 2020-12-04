@@ -1,15 +1,18 @@
 import React from 'react';
+import { useTracker } from 'meteor/react-meteor-data';
 import { BlogPost } from './BlogPost';
-import { BlogPostsCollection } from "/imports/api/TasksCollection"
+import { BlogPostsCollection } from "/imports/api/BlogPostsCollection"
 
-const blogPosts = {};
+export const App = () => {
+  const blogPosts = useTracker(() => BlogPostsCollection.find({}).fetch());
 
-export const App = () => (
-  <div>
-        <h1>Welcome to QuantGate!</h1>
- 
-        <ul>
-          { blogPosts.map(blogPost => <BlogPost key={ blogPost._id } blogPost={ blogPost }/>) }
-        </ul>
-  </div>
-);
+  return (
+    <div>
+          <h1>Welcome to QuantGate!</h1>
+  
+          <ul>
+            { blogPosts.map(blogPost => <BlogPost key={ blogPost._id } blogPost={ blogPost }/>) }
+          </ul>
+    </div>
+  )
+};

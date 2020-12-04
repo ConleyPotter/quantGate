@@ -1,27 +1,33 @@
 import { Meteor } from 'meteor/meteor';
 import { BlogPostsCollection } from '/imports/api/BlogPostsCollection';
 var contentful = require('contentful');
+import contentfulKeys from '../config/contentful_keys';
 
-/* global Assets */
-import dotenv from 'dotenv';
-dotenv.config({
-  path: Assets.absoluteFilePath('.env'),
+var client = contentful.createClient({
+  space: contentfulKeys.spaceId,
+  accessToken: contentfulKeys.accessToken,
 });
 
-
-
-const insertBlogPost = blogPostTitle => BlogPostsCollection.insert({ title: blogPostTitle });
- 
-Meteor.startup(() => {
-  if (BlogPostsCollection.find().count() === 0) {
-    [
-      'First Task',
-      'Second Task',
-      'Third Task',
-      'Fourth Task',
-      'Fifth Task',
-      'Sixth Task',
-      'Seventh Task'
-    ].forEach(insertBlogPost)
+const insertBlogPost = blogPost => {
+  if (!BlogPostsCollection.findOne({ title: blogPost.fields.title })) {
+    BlogPostsCollection.insert({ 
+      title: blogPost.fields.title,
+      author: blogPost.fields.author,
+      heroImage: blogPost.fields.heroImage,
+    });
   }
+}
+
+client.getEntries({
+  "content_type": "blogPost",
+})
+.then(function (entries) {
+  // log the title for all the entries that have it
+  Meteor.startup(() => {
+      entries.items.forEach(function (entry) {
+        if(entry.fields.title) {
+          insertBlogPost(entry);
+        }
+      });
+  });
 });
