@@ -8,12 +8,20 @@ var client = contentful.createClient({
   accessToken: contentfulKeys.accessToken,
 });
 
-const insertBlogPost = blogPost => {
+// const getHeroImageSrc = (id) => {
+//   client.getAsset(id)
+//     .then(asset => {
+//       return asset.fields.file.url
+//     })
+//     .catch(err => console.log(err))
+// }
+
+const insertBlogPost =  (blogPost, heroImageSrc) => {
   if (!BlogPostsCollection.findOne({ title: blogPost.fields.title })) {
-    BlogPostsCollection.insert({ 
+    BlogPostsCollection.insert({
       title: blogPost.fields.title,
       author: blogPost.fields.author,
-      heroImage: blogPost.fields.heroImage,
+      heroImageSrc: heroImageSrc,
     });
   }
 }
@@ -22,11 +30,11 @@ client.getEntries({
   "content_type": "blogPost",
 })
 .then(function (entries) {
-  // log the title for all the entries that have it
   Meteor.startup(() => {
       entries.items.forEach(function (entry) {
         if(entry.fields.title) {
-          insertBlogPost(entry);
+          const heroImageSrc = entry.fields.heroImage.fields.file.url;
+          insertBlogPost(entry, heroImageSrc);
         }
       });
   });
