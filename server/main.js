@@ -18,6 +18,7 @@ const insertBlogPost =  (blogPost, heroImageSrc) => {
       title: blogPost.fields.title,
       author: blogPost.fields.author,
       heroImageSrc: heroImageSrc,
+      createdAt: new Date(),
     });
   }
 }

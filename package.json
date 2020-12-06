@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.0.4",
+    "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "postcss": "^8.1.13",
     "postcss-load-config": "^3.0.0"
