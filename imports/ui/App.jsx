@@ -4,7 +4,7 @@ import { BlogPost } from './BlogPost';
 import { BlogPostsCollection } from "/imports/api/BlogPostsCollection"
 
 export const App = () => {
-  const blogPosts = useTracker(() => BlogPostsCollection.find({}).fetch());
+  const blogPosts = useTracker(() => BlogPostsCollection.find({}, { sort: { createdAt: -1 } }).fetch());
 
   return (
     <div>

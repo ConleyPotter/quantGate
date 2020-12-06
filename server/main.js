@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { BlogPostsCollection } from '/imports/api/BlogPostsCollection';
+import { Accounts } from 'meteor/accounts-base';
 var contentful = require('contentful');
 import contentfulKeys from '../config/contentful_keys';
 
@@ -8,13 +9,8 @@ var client = contentful.createClient({
   accessToken: contentfulKeys.accessToken,
 });
 
-// const getHeroImageSrc = (id) => {
-//   client.getAsset(id)
-//     .then(asset => {
-//       return asset.fields.file.url
-//     })
-//     .catch(err => console.log(err))
-// }
+const SEED_USERNAME = 'meteorite';
+const SEED_PASSWORD = 'password';
 
 const insertBlogPost =  (blogPost, heroImageSrc) => {
   if (!BlogPostsCollection.findOne({ title: blogPost.fields.title })) {
@@ -31,11 +27,17 @@ client.getEntries({
 })
 .then(function (entries) {
   Meteor.startup(() => {
-      entries.items.forEach(function (entry) {
-        if(entry.fields.title) {
-          const heroImageSrc = entry.fields.heroImage.fields.file.url;
-          insertBlogPost(entry, heroImageSrc);
-        }
-      });
+    if (!Accounts.findUserByUsername(SEED_USERNAME)) {
+      Accounts.createUser({
+        username: SEED_USERNAME,
+        password: SEED_PASSWORD,
+      })
+    }
+    entries.items.forEach(function (entry) {
+      if(entry.fields.title) {
+        const heroImageSrc = entry.fields.heroImage.fields.file.url;
+        insertBlogPost(entry, heroImageSrc);
+      }
+    });
   });
 });
